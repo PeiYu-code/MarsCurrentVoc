@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>英文單字配對測試</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="game-container">
+    <h1>英文單字配對測試</h1>
+    
+    <div class="stats-bar">
+      <span>本回剩餘單字數: <span id="progress">0 / 0</span></span>
+      <span>計時: <span id="timer">00:00</span></span>
+    </div>
+
+    <!-- 關鍵修改：分左右兩欄容器 -->
+    <div class="matching-area">
+      <div class="column" id="english-column">
+        <div class="slot"><span class="slot-text"></span></div>
+        <div class="slot"><span class="slot-text"></span></div>
+        <div class="slot"><span class="slot-text"></span></div>
+        <div class="slot"><span class="slot-text"></span></div>
+        <div class="slot"><span class="slot-text"></span></div>
+      </div>
+      <div class="column" id="chinese-column">
+        <div class="slot"><span class="slot-text"></span></div>
+        <div class="slot"><span class="slot-text"></span></div>
+        <div class="slot"><span class="slot-text"></span></div>
+        <div class="slot"><span class="slot-text"></span></div>
+        <div class="slot"><span class="slot-text"></span></div>
+      </div>
+    </div>
+
+    <div class="control-bar">
+      <button id="restart-btn" class="btn">重新開始</button>
+    </div>
+  </div>
+
+  <div id="result-modal" class="result-modal hidden">
+    <div class="modal-content">
+      <h2>恭喜通關！</h2>
+      <p>總耗時：<span id="final-time">00:00</span></p>
+      <button id="modal-restart-btn" class="btn">再來一局</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
