@@ -1,272 +1,243 @@
 const wordBank = [
-{ eng: 'amaze', ch: '使⋯⋯驚訝(v.)' },
-{ eng: 'amazement', ch: '驚奇、吃驚(n.)' },
-{ eng: 'aside', ch: '在旁邊(adv.)' },
-{ eng: 'aside from', ch: '除了⋯⋯之外' },
-{ eng: 'aware', ch: '意識到的(adj.)' },
-{ eng: 'awareness', ch: '意識、覺醒(n.)' },
-{ eng: 'be aware of', ch: '知道' },
-{ eng: 'beware', ch: '注意(v.)' },
-{ eng: 'bacteria', ch: '細菌' },
-{ eng: 'benefit', ch: '好處(v., n.)' },
-{ eng: 'citizen', ch: '市民、公民(n.)' },
-{ eng: 'be conscious of', ch: '有意識的(adj.)' },
-{ eng: 'constant', ch: '持續的(adj.); 永恆的事物(n.)' },
-{ eng: 'constantly', ch: '不斷地(adv.)' },
-{ eng: 'deposit', ch: '存錢(v.); 訂金、押金(n.)' },
-{ eng: 'withdraw', ch: '提領(v.)' },
-{ eng: 'engage', ch: '使⋯⋯參與(+in)、訂婚(+to)(v.)' },
-{ eng: 'engagement', ch: '訂婚、約定(n.)' },
-{ eng: 'extreme', ch: '極端的(adj., n.)' },
-{ eng: 'go to extremes', ch: '走向極端' },
-{ eng: 'location', ch: '地點(n.)' },
-{ eng: 'be located at/in/on', ch: '坐落於' },
-{ eng: 'medal', ch: '獎牌(n.)' },
-{ eng: 'native to', ch: '本國、本土的(adj.); 原住民(n.)' },
-{ eng: 'organic', ch: '有機的(adj.)' },
-{ eng: 'organize', ch: '組織、安排(v.)' },
-{ eng: 'organization', ch: '組織、機構(n.)' },
-{ eng: 'presence', ch: '出席、在場(n.)' },
-{ eng: 'present', ch: '呈現、上台報告(v.); 禮物(n.); 在場的(adj.)' },
-{ eng: 'process', ch: '過程(v., n.); 加工(v.)' },
-{ eng: 'processed food', ch: '加工食品' },
-{ eng: 'religion', ch: '宗教(n.)' },
-{ eng: 'religious', ch: '宗教的、虔誠的(adj.)' },
-{ eng: 'remain', ch: '維持、留下(v.)' },
-{ eng: 'remains', ch: '剩餘物、遺骸(n.)' },
-{ eng: 'replace A with B', ch: '用 B 取代 A' },
-{ eng: 'replacement for', ch: '替代(物)' },
-{ eng: 'request', ch: '要求(v., n.)' },
-{ eng: 'at one’s request', ch: '應某人要求' },
-{ eng: 'resource', ch: '資源(n.)' },
-{ eng: 'source', ch: '來源(n.)' },
-{ eng: 'risk', ch: '冒⋯⋯的風險(v.); 風險(n.)' },
-{ eng: 'risky', ch: '冒險的、有風險的(adj.)' },
-{ eng: 'run a/the risk of', ch: '冒⋯⋯的風險' },
-{ eng: 'routine', ch: '例行程序(n., adj.)' },
-{ eng: 'scientist', ch: '科學家(n.)' },
-{ eng: 'scientific', ch: '科學的(adj.)' },
-{ eng: 'suffer from', ch: '遭受(苦難)(v.)' },
-{ eng: 'suffering', ch: '受苦、痛苦(n.)' },
-{ eng: 'talent', ch: '天賦、才能(n.)' },
-{ eng: 'talented', ch: '有天賦的(adj.)' },
-{ eng: 'threat', ch: '威脅(n.)' },
-{ eng: 'threaten', ch: '威脅(v.)' },
-{ eng: 'pose a threat to', ch: '對⋯⋯造成威脅' },
-{ eng: 'unique to', ch: '獨特的(adj.)' },
+  { eng: 'amaze', ch: '使⋯⋯驚訝(v.)' },
+  { eng: 'amazement', ch: '驚奇、吃驚(n.)' },
+  { eng: 'aside', ch: '在旁邊(adv.)' },
+  { eng: 'aside from', ch: '除了⋯⋯之外' },
+  { eng: 'aware', ch: '意識到的(adj.)' },
+  { eng: 'awareness', ch: '意識、覺醒(n.)' },
+  { eng: 'be aware of', ch: '知道' },
+  { eng: 'beware', ch: '注意(v.)' },
+  { eng: 'bacteria', ch: '細菌' },
+  { eng: 'benefit', ch: '好處(v., n.)' },
+  { eng: 'citizen', ch: '市民、公民(n.)' },
+  { eng: 'be conscious of', ch: '有意識的(adj.)' },
+  { eng: 'constant', ch: '持續的(adj.); 永恆的事物(n.)' },
+  { eng: 'constantly', ch: '不斷地(adv.)' },
+  { eng: 'deposit', ch: '存錢(v.); 訂金、押金(n.)' },
+  { eng: 'withdraw', ch: '提領(v.)' },
+  { eng: 'engage', ch: '使⋯⋯參與(+in)、訂婚(+to)(v.)' },
+  { eng: 'engagement', ch: '訂婚、約定(n.)' },
+  { eng: 'extreme', ch: '極端的(adj., n.)' },
+  { eng: 'go to extremes', ch: '走向極端' },
+  { eng: 'location', ch: '地點(n.)' },
+  { eng: 'be located at/in/on', ch: '坐落於' },
+  { eng: 'medal', ch: '獎牌(n.)' },
+  { eng: 'native to', ch: '本國、本土的(adj.); 原住民(n.)' },
+  { eng: 'organic', ch: '有機的(adj.)' },
+  { eng: 'organize', ch: '組織、安排(v.)' },
+  { eng: 'organization', ch: '組織、機構(n.)' },
+  { eng: 'presence', ch: '出席、在場(n.)' },
+  { eng: 'present', ch: '呈現、上台報告(v.); 禮物(n.); 在場的(adj.)' },
+  { eng: 'process', ch: '過程(v., n.); 加工(v.)' },
+  { eng: 'processed food', ch: '加工食品' },
+  { eng: 'religion', ch: '宗教(n.)' },
+  { eng: 'religious', ch: '宗教的、虔誠的(adj.)' },
+  { eng: 'remain', ch: '維持、留下(v.)' },
+  { eng: 'remains', ch: '剩餘物、遺骸(n.)' },
+  { eng: 'replace A with B', ch: '用 B 取代 A' },
+  { eng: 'replacement for', ch: '替代(物)' },
+  { eng: 'request', ch: '要求(v., n.)' },
+  { eng: 'at one’s request', ch: '應某人要求' },
+  { eng: 'resource', ch: '資源(n.)' },
+  { eng: 'source', ch: '來源(n.)' },
+  { eng: 'risk', ch: '冒⋯⋯的風險(v.); 風險(n.)' },
+  { eng: 'risky', ch: '冒險的、有風險的(adj.)' },
+  { eng: 'run a/the risk of', ch: '冒⋯⋯的風險' },
+  { eng: 'routine', ch: '例行程序(n., adj.)' },
+  { eng: 'scientist', ch: '科學家(n.)' },
+  { eng: 'scientific', ch: '科學的(adj.)' },
+  { eng: 'suffer from', ch: '遭受(苦難)(v.)' },
+  { eng: 'suffering', ch: '受苦、痛苦(n.)' },
+  { eng: 'talent', ch: '天賦、才能(n.)' },
+  { eng: 'talented', ch: '有天賦的(adj.)' },
+  { eng: 'threat', ch: '威脅(n.)' },
+  { eng: 'threaten', ch: '威脅(v.)' },
+  { eng: 'pose a threat to', ch: '對⋯⋯造成威脅' },
+  { eng: 'unique to', ch: '獨特的(adj.)' }
 ];
 
-let currentQueue = [];
-let activeEng = [null, null, null, null, null];
-let activeCh = [null, null, null, null, null];
-let selectedEngSlot = null;
-let selectedChSlot = null;
-let startTime = 0;
-let timerInterval = null;
-let completedCount = 0;
+// Google Apps Script Web App URL
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxDCMJLqxfxnIrNM8WaPZEIoKG08n-egNK-eFutLXT8uY6-mzc0tdi4R7-UjEQEMWbbXg/exec';
 
-function shuffle(array) {
-  const arr = [...array];
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-}
+let currentQuiz = [];
+let currentIndex = 0;
+let score = 0;
+let wrongWords = [];
+let startTime = null;
+let endTime = null;
 
-function initGame() {
-  clearInterval(timerInterval);
-  completedCount = 0;
-  selectedEngSlot = null;
-  selectedChSlot = null;
+// DOM 元素
+const startScreen = document.getElementById('start-screen');
+const quizScreen = document.getElementById('quiz-screen');
+const resultScreen = document.getElementById('result-screen');
+const studentNameInput = document.getElementById('student-name');
+const questionText = document.getElementById('question-text');
+const optionsContainer = document.getElementById('options-container');
+const progressText = document.getElementById('progress-text');
+const scoreText = document.getElementById('score-text');
+const wrongList = document.getElementById('wrong-list');
 
-  document.getElementById('progress').textContent = `0 / ${wordBank.length}`;
-  document.getElementById('timer').textContent = '00:00';
-  document.getElementById('result-modal').classList.add('hidden');
-
-  const indexedWords = wordBank.map((item, index) => ({ ...item, id: index }));
-  currentQueue = shuffle(indexedWords);
-
-  // 初始化前 5 個單字
-  const initialItems = [];
-  for (let i = 0; i < 5 && currentQueue.length > 0; i++) {
-    initialItems.push(currentQueue.pop());
+function startQuiz() {
+  const name = studentNameInput ? studentNameInput.value.trim() : '';
+  if (studentNameInput && !name) {
+    alert('請輸入姓名！');
+    return;
   }
 
-  activeEng = [...initialItems];
-  activeCh = shuffle([...initialItems]);
+  // 紀錄開始時間
+  startTime = new Date();
 
-  // 開局初始化不執行 fade out 動畫，直接渲染
-  updateSlotContentsSmoothly(-1, false);
+  // 隨機排序單字
+  currentQuiz = [...wordBank].sort(() => Math.random() - 0.5);
+  currentIndex = 0;
+  score = 0;
+  wrongWords = [];
 
-  startTime = Date.now();
-  timerInterval = setInterval(updateTimer, 1000);
+  if (startScreen) startScreen.classList.add('hidden');
+  if (resultScreen) resultScreen.classList.add('hidden');
+  if (quizScreen) quizScreen.classList.remove('hidden');
+
+  showNextQuestion();
 }
 
-function updateSlotContentsSmoothly(replacedEngIndex = -1, animate = true) {
-  const engSlots = document.querySelectorAll('#english-column .slot');
-  const chSlots = document.querySelectorAll('#chinese-column .slot');
+function showNextQuestion() {
+  if (currentIndex >= currentQuiz.length) {
+    endQuiz();
+    return;
+  }
 
-  // 定義要觸發 fade 動畫的文字元素 (Span)
-  let fadingSpans = [];
+  const currentWord = currentQuiz[currentIndex];
+  if (progressText) progressText.innerText = `題目 ${currentIndex + 1} / ${currentQuiz.length}`;
+  if (questionText) questionText.innerText = currentWord.eng;
 
-  if (animate) {
-    // 右側全部中文均套用淡入淡出
-    chSlots.forEach(slot => {
-      const span = slot.querySelector('.slot-text');
-      if (span) fadingSpans.push(span);
+  // 產生 4 個選項（1 正確 + 3 錯誤）
+  const options = [currentWord.ch];
+  const otherWords = wordBank.filter(w => w.eng !== currentWord.eng);
+  const shuffledOthers = [...otherWords].sort(() => Math.random() - 0.5);
+
+  for (let i = 0; i < Math.min(3, shuffledOthers.length); i++) {
+    options.push(shuffledOthers[i].ch);
+  }
+
+  options.sort(() => Math.random() - 0.5);
+
+  if (optionsContainer) {
+    optionsContainer.innerHTML = '';
+    options.forEach(option => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.innerText = option;
+      btn.onclick = () => checkAnswer(option, currentWord);
+      optionsContainer.appendChild(btn);
     });
+  }
+}
 
-    // 左側英文只針對「新替補位置」的文字套用淡入淡出
-    if (replacedEngIndex !== -1 && engSlots[replacedEngIndex]) {
-      const span = engSlots[replacedEngIndex].querySelector('.slot-text');
-      if (span) fadingSpans.push(span);
+function checkAnswer(selectedOption, currentWord) {
+  if (selectedOption === currentWord.ch) {
+    score++;
+  } else {
+    wrongWords.push({
+      eng: currentWord.eng,
+      ch: currentWord.ch,
+      userAnswer: selectedOption
+    });
+  }
+
+  currentIndex++;
+  showNextQuestion();
+}
+
+function endQuiz() {
+  // 紀錄結束時間
+  endTime = new Date();
+
+  if (quizScreen) quizScreen.classList.add('hidden');
+  if (resultScreen) resultScreen.classList.remove('hidden');
+
+  if (scoreText) scoreText.innerText = `答對：${score} 題 / 答錯：${wrongWords.length} 題（共 ${currentQuiz.length} 題）`;
+
+  // 顯示錯題清單
+  if (wrongList) {
+    wrongList.innerHTML = '';
+    if (wrongWords.length === 0) {
+      wrongList.innerHTML = '<li>太棒了！完全沒有答錯的題目！</li>';
+    } else {
+      wrongWords.forEach(item => {
+        const li = document.createElement('li');
+        li.innerText = `${item.eng} - 正確答案：${item.ch} (你的回答：${item.userAnswer})`;
+        wrongList.appendChild(li);
+      });
     }
   }
 
-  const updateTexts = () => {
-    // 1. 更新左側英文 (維持原位，僅替換指定 Index)
-    engSlots.forEach((slot, i) => {
-      const span = slot.querySelector('.slot-text');
-      if (activeEng[i]) {
-        span.textContent = activeEng[i].eng;
-        slot.dataset.id = activeEng[i].id;
-        slot.style.visibility = 'visible';
-      } else {
-        slot.style.visibility = 'hidden';
-        slot.dataset.id = '';
-      }
-      slot.classList.remove('selected', 'wrong');
-    });
+  // 上傳成績至 Google Sheet
+  uploadResult();
+}
 
-    // 2. 更新右側中文 (全新打亂後的順序)
-    chSlots.forEach((slot, i) => {
-      const span = slot.querySelector('.slot-text');
-      if (activeCh[i]) {
-        span.textContent = activeCh[i].ch;
-        slot.dataset.id = activeCh[i].id;
-        slot.style.visibility = 'visible';
-      } else {
-        slot.style.visibility = 'hidden';
-        slot.dataset.id = '';
-      }
-      slot.classList.remove('selected', 'wrong');
-    });
+// 計算耗時格式（例如：1分25秒 或 45秒）
+function calculateDuration(start, end) {
+  const durationMs = end - start;
+  const totalSeconds = Math.floor(durationMs / 1000);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
 
-    // 文字替換後，移除透明度遮罩觸發 Fade In
-    fadingSpans.forEach(span => span.classList.remove('text-fade-out'));
+  if (minutes > 0) {
+    return `${minutes}分${seconds}秒`;
+  }
+  return `${seconds}秒`;
+}
+
+function uploadResult() {
+  const name = studentNameInput ? studentNameInput.value.trim() : '未填寫姓名';
+  const statusDiv = document.getElementById('upload-status') || createStatusDiv();
+
+  statusDiv.innerText = '正在傳送成績至 Google Sheet...';
+  statusDiv.style.color = '#666';
+
+  // 格式化考錯的單字字串 (格式如: "amaze (使驚訝), beware (注意)")
+  const wrongWordsString = wrongWords.length > 0
+    ? wrongWords.map(w => `${w.eng} (${w.ch})`).join(', ')
+    : '無';
+
+  const payload = {
+    name: name,
+    timestamp: endTime ? endTime.toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' }) : new Date().toLocaleString(),
+    duration: calculateDuration(startTime, endTime),
+    correctCount: score,
+    wrongCount: wrongWords.length,
+    wrongWordsList: wrongWordsString
   };
 
-  if (animate && fadingSpans.length > 0) {
-    // 觸發 Fade Out
-    fadingSpans.forEach(span => span.classList.add('text-fade-out'));
-    // 等待 Fade Out 完成後更換文字，再 Fade In
-    setTimeout(updateTexts, 600);
-  } else {
-    updateTexts();
-  }
-}
-
-function updateTimer() {
-  const elapsed = Math.floor((Date.now() - startTime) / 1000);
-  const minutes = String(Math.floor(elapsed / 60)).padStart(2, '0');
-  const seconds = String(elapsed % 60).padStart(2, '0');
-  document.getElementById('timer').textContent = `${minutes}:${seconds}`;
-}
-
-function handleEngClick(e) {
-  const slot = e.currentTarget;
-  if (!slot.dataset.id) return;
-
-  document.querySelectorAll('#english-column .slot').forEach(s => s.classList.remove('selected', 'wrong'));
-  slot.classList.add('selected');
-  selectedEngSlot = slot;
-
-  checkMatch();
-}
-
-function handleChClick(e) {
-  const slot = e.currentTarget;
-  if (!slot.dataset.id) return;
-
-  document.querySelectorAll('#chinese-column .slot').forEach(s => s.classList.remove('selected', 'wrong'));
-  slot.classList.add('selected');
-  selectedChSlot = slot;
-
-  checkMatch();
-}
-
-function checkMatch() {
-  if (!selectedEngSlot || !selectedChSlot) return;
-
-  const engId = selectedEngSlot.dataset.id;
-  const chId = selectedChSlot.dataset.id;
-
-  if (engId === chId) {
-    completedCount++;
-    document.getElementById('progress').textContent = `${completedCount} / ${wordBank.length}`;
-
-    // 取得配對成功的英文索引
-    const engIndex = activeEng.findIndex(item => item && String(item.id) === engId);
-
-    // 抽出一組新單字
-    const newItem = currentQueue.length > 0 ? currentQueue.pop() : null;
-
-    // 1. 左側英文：只更新被消除的那格，其他 4 格不變
-    activeEng[engIndex] = newItem;
-
-    // 2. 右側中文：扣除舊單字、加入新單字並洗牌
-    activeCh = activeCh.filter(item => item && String(item.id) !== chId);
-    if (newItem) {
-      activeCh.push(newItem);
-    }
-    activeCh = shuffle(activeCh);
-
-    selectedEngSlot = null;
-    selectedChSlot = null;
-
-    // 若英文全數清空，宣告通關
-    if (activeEng.every(item => item === null)) {
-      setTimeout(showResult, 600);
-    } else {
-      // 傳入 engIndex，讓系統知道「只有該格英文需要 fade 效果」
-      updateSlotContentsSmoothly(engIndex, true);
-    }
-  } else {
-    selectedEngSlot.classList.add('wrong');
-    selectedChSlot.classList.add('wrong');
-    
-    const eSlot = selectedEngSlot;
-    const cSlot = selectedChSlot;
-    
-    setTimeout(() => {
-      eSlot.classList.remove('selected', 'wrong');
-      cSlot.classList.remove('selected', 'wrong');
-    }, 500);
-
-    selectedEngSlot = null;
-    selectedChSlot = null;
-  }
-}
-
-function showResult() {
-  clearInterval(timerInterval);
-  const finalTime = document.getElementById('timer').textContent;
-  document.getElementById('final-time').textContent = finalTime;
-  document.getElementById('result-modal').classList.remove('hidden');
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('#english-column .slot').forEach(slot => {
-    slot.addEventListener('click', handleEngClick);
+  fetch(GOOGLE_SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(payload)
+  })
+  .then(() => {
+    statusDiv.innerText = '成績已成功傳送！';
+    statusDiv.style.color = 'green';
+  })
+  .catch(error => {
+    console.error('上傳失敗:', error);
+    statusDiv.innerText = '成績上傳失敗，請檢查網路連線。';
+    statusDiv.style.color = 'red';
   });
+}
 
-  document.querySelectorAll('#chinese-column .slot').forEach(slot => {
-    slot.addEventListener('click', handleChClick);
-  });
+function createStatusDiv() {
+  const div = document.createElement('div');
+  div.id = 'upload-status';
+  div.style.marginTop = '15px';
+  div.style.fontWeight = 'bold';
+  if (resultScreen) resultScreen.appendChild(div);
+  return div;
+}
 
-  document.getElementById('restart-btn').addEventListener('click', initGame);
-  document.getElementById('modal-restart-btn').addEventListener('click', initGame);
-
-  initGame();
-});
+function restartQuiz() {
+  if (resultScreen) resultScreen.classList.add('hidden');
+  if (startScreen) startScreen.classList.remove('hidden');
+}
