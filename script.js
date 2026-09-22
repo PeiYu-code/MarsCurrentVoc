@@ -1,5 +1,8 @@
+// 已填入您的 Google Apps Script Web App 部署 URL
+const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbzlo0feZG57o8F7D2Jj7mPSIX77KG3pjO79PXPgE5ek6K5OBzwI6YaE4_gavdLp_gQosQ/exec';
+
 const wordBank = [
-  { eng: 'amaze', ch: '使⋯⋯驚訝(v.)' },
+{ eng: 'amaze', ch: '使⋯⋯驚訝(v.)' },
   { eng: 'amazement', ch: '驚奇、吃驚(n.)' },
   { eng: 'aside', ch: '在旁邊(adv.)' },
   { eng: 'aside from', ch: '除了⋯⋯之外' },
@@ -56,188 +59,260 @@ const wordBank = [
   { eng: 'unique to', ch: '獨特的(adj.)' }
 ];
 
-// Google Apps Script Web App URL
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxDCMJLqxfxnIrNM8WaPZEIoKG08n-egNK-eFutLXT8uY6-mzc0tdi4R7-UjEQEMWbbXg/exec';
+let currentQueue = [];
+let activeEng = [null, null, null, null, null];
+let activeCh = [null, null, null, null, null];
+let selectedEngSlot = null;
+let selectedChSlot = null;
+let startTime = 0;
+let timerInterval = null;
+let completedCount = 0;
 
-let currentQuiz = [];
-let currentIndex = 0;
-let score = 0;
-let wrongWords = [];
-let startTime = null;
-let endTime = null;
+// 追蹤答錯相關數據
+let wrongCount = 0;
+let wrongWordsSet = new Set();
 
-// DOM 元素
-const startScreen = document.getElementById('start-screen');
-const quizScreen = document.getElementById('quiz-screen');
-const resultScreen = document.getElementById('result-screen');
-const studentNameInput = document.getElementById('student-name');
-const questionText = document.getElementById('question-text');
-const optionsContainer = document.getElementById('options-container');
-const progressText = document.getElementById('progress-text');
-const scoreText = document.getElementById('score-text');
-const wrongList = document.getElementById('wrong-list');
-
-function startQuiz() {
-  const name = studentNameInput ? studentNameInput.value.trim() : '';
-  if (studentNameInput && !name) {
-    alert('請輸入姓名！');
-    return;
+function shuffle(array) {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
   }
-
-  // 紀錄開始時間
-  startTime = new Date();
-
-  // 隨機排序單字
-  currentQuiz = [...wordBank].sort(() => Math.random() - 0.5);
-  currentIndex = 0;
-  score = 0;
-  wrongWords = [];
-
-  if (startScreen) startScreen.classList.add('hidden');
-  if (resultScreen) resultScreen.classList.add('hidden');
-  if (quizScreen) quizScreen.classList.remove('hidden');
-
-  showNextQuestion();
+  return arr;
 }
 
-function showNextQuestion() {
-  if (currentIndex >= currentQuiz.length) {
-    endQuiz();
-    return;
+function initGame() {
+  clearInterval(timerInterval);
+  completedCount = 0;
+  wrongCount = 0;
+  wrongWordsSet.clear();
+  selectedEngSlot = null;
+  selectedChSlot = null;
+
+  document.getElementById('progress').textContent = `0 / ${wordBank.length}`;
+  document.getElementById('timer').textContent = '00:00';
+  document.getElementById('result-modal').classList.add('hidden');
+
+  const indexedWords = wordBank.map((item, index) => ({ ...item, id: index }));
+  currentQueue = shuffle(indexedWords);
+
+  // 初始化前 5 個單字
+  const initialItems = [];
+  for (let i = 0; i < 5 && currentQueue.length > 0; i++) {
+    initialItems.push(currentQueue.pop());
   }
 
-  const currentWord = currentQuiz[currentIndex];
-  if (progressText) progressText.innerText = `題目 ${currentIndex + 1} / ${currentQuiz.length}`;
-  if (questionText) questionText.innerText = currentWord.eng;
+  activeEng = [...initialItems];
+  activeCh = shuffle([...initialItems]);
 
-  // 產生 4 個選項（1 正確 + 3 錯誤）
-  const options = [currentWord.ch];
-  const otherWords = wordBank.filter(w => w.eng !== currentWord.eng);
-  const shuffledOthers = [...otherWords].sort(() => Math.random() - 0.5);
+  // 開局初始化不執行 fade out 動畫，直接渲染
+  updateSlotContentsSmoothly(-1, false);
 
-  for (let i = 0; i < Math.min(3, shuffledOthers.length); i++) {
-    options.push(shuffledOthers[i].ch);
-  }
+  startTime = Date.now();
+  timerInterval = setInterval(updateTimer, 1000);
+}
 
-  options.sort(() => Math.random() - 0.5);
+function updateSlotContentsSmoothly(replacedEngIndex = -1, animate = true) {
+  const engSlots = document.querySelectorAll('#english-column .slot');
+  const chSlots = document.querySelectorAll('#chinese-column .slot');
 
-  if (optionsContainer) {
-    optionsContainer.innerHTML = '';
-    options.forEach(option => {
-      const btn = document.createElement('button');
-      btn.className = 'option-btn';
-      btn.innerText = option;
-      btn.onclick = () => checkAnswer(option, currentWord);
-      optionsContainer.appendChild(btn);
+  // 定義要觸發 fade 動畫的文字元素 (Span)
+  let fadingSpans = [];
+
+  if (animate) {
+    // 右側全部中文均套用淡入淡出
+    chSlots.forEach(slot => {
+      const span = slot.querySelector('.slot-text');
+      if (span) fadingSpans.push(span);
     });
-  }
-}
 
-function checkAnswer(selectedOption, currentWord) {
-  if (selectedOption === currentWord.ch) {
-    score++;
-  } else {
-    wrongWords.push({
-      eng: currentWord.eng,
-      ch: currentWord.ch,
-      userAnswer: selectedOption
-    });
-  }
-
-  currentIndex++;
-  showNextQuestion();
-}
-
-function endQuiz() {
-  // 紀錄結束時間
-  endTime = new Date();
-
-  if (quizScreen) quizScreen.classList.add('hidden');
-  if (resultScreen) resultScreen.classList.remove('hidden');
-
-  if (scoreText) scoreText.innerText = `答對：${score} 題 / 答錯：${wrongWords.length} 題（共 ${currentQuiz.length} 題）`;
-
-  // 顯示錯題清單
-  if (wrongList) {
-    wrongList.innerHTML = '';
-    if (wrongWords.length === 0) {
-      wrongList.innerHTML = '<li>太棒了！完全沒有答錯的題目！</li>';
-    } else {
-      wrongWords.forEach(item => {
-        const li = document.createElement('li');
-        li.innerText = `${item.eng} - 正確答案：${item.ch} (你的回答：${item.userAnswer})`;
-        wrongList.appendChild(li);
-      });
+    // 左側英文只針對「新替補位置」的文字套用淡入淡出
+    if (replacedEngIndex !== -1 && engSlots[replacedEngIndex]) {
+      const span = engSlots[replacedEngIndex].querySelector('.slot-text');
+      if (span) fadingSpans.push(span);
     }
   }
 
-  // 上傳成績至 Google Sheet
-  uploadResult();
-}
+  const updateTexts = () => {
+    // 1. 更新左側英文 (維持原位，僅替換指定 Index)
+    engSlots.forEach((slot, i) => {
+      const span = slot.querySelector('.slot-text');
+      if (activeEng[i]) {
+        span.textContent = activeEng[i].eng;
+        slot.dataset.id = activeEng[i].id;
+        slot.style.visibility = 'visible';
+      } else {
+        slot.style.visibility = 'hidden';
+        slot.dataset.id = '';
+      }
+      slot.classList.remove('selected', 'wrong');
+    });
 
-// 計算耗時格式（例如：1分25秒 或 45秒）
-function calculateDuration(start, end) {
-  const durationMs = end - start;
-  const totalSeconds = Math.floor(durationMs / 1000);
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
+    // 2. 更新右側中文 (全新打亂後的順序)
+    chSlots.forEach((slot, i) => {
+      const span = slot.querySelector('.slot-text');
+      if (activeCh[i]) {
+        span.textContent = activeCh[i].ch;
+        slot.dataset.id = activeCh[i].id;
+        slot.style.visibility = 'visible';
+      } else {
+        slot.style.visibility = 'hidden';
+        slot.dataset.id = '';
+      }
+      slot.classList.remove('selected', 'wrong');
+    });
 
-  if (minutes > 0) {
-    return `${minutes}分${seconds}秒`;
-  }
-  return `${seconds}秒`;
-}
-
-function uploadResult() {
-  const name = studentNameInput ? studentNameInput.value.trim() : '未填寫姓名';
-  const statusDiv = document.getElementById('upload-status') || createStatusDiv();
-
-  statusDiv.innerText = '正在傳送成績至 Google Sheet...';
-  statusDiv.style.color = '#666';
-
-  // 格式化考錯的單字字串 (格式如: "amaze (使驚訝), beware (注意)")
-  const wrongWordsString = wrongWords.length > 0
-    ? wrongWords.map(w => `${w.eng} (${w.ch})`).join(', ')
-    : '無';
-
-  const payload = {
-    name: name,
-    timestamp: endTime ? endTime.toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' }) : new Date().toLocaleString(),
-    duration: calculateDuration(startTime, endTime),
-    correctCount: score,
-    wrongCount: wrongWords.length,
-    wrongWordsList: wrongWordsString
+    // 文字替換後，移除透明度遮罩觸發 Fade In
+    fadingSpans.forEach(span => span.classList.remove('text-fade-out'));
   };
 
-  fetch(GOOGLE_SCRIPT_URL, {
+  if (animate && fadingSpans.length > 0) {
+    // 觸發 Fade Out
+    fadingSpans.forEach(span => span.classList.add('text-fade-out'));
+    // 等待 Fade Out 完成後更換文字，再 Fade In
+    setTimeout(updateTexts, 600);
+  } else {
+    updateTexts();
+  }
+}
+
+function updateTimer() {
+  const elapsed = Math.floor((Date.now() - startTime) / 1000);
+  const minutes = String(Math.floor(elapsed / 60)).padStart(2, '0');
+  const seconds = String(elapsed % 60).padStart(2, '0');
+  document.getElementById('timer').textContent = `${minutes}:${seconds}`;
+}
+
+function handleEngClick(e) {
+  const slot = e.currentTarget;
+  if (!slot.dataset.id) return;
+
+  document.querySelectorAll('#english-column .slot').forEach(s => s.classList.remove('selected', 'wrong'));
+  slot.classList.add('selected');
+  selectedEngSlot = slot;
+
+  checkMatch();
+}
+
+function handleChClick(e) {
+  const slot = e.currentTarget;
+  if (!slot.dataset.id) return;
+
+  document.querySelectorAll('#chinese-column .slot').forEach(s => s.classList.remove('selected', 'wrong'));
+  slot.classList.add('selected');
+  selectedChSlot = slot;
+
+  checkMatch();
+}
+
+function checkMatch() {
+  if (!selectedEngSlot || !selectedChSlot) return;
+
+  const engId = selectedEngSlot.dataset.id;
+  const chId = selectedChSlot.dataset.id;
+
+  if (engId === chId) {
+    completedCount++;
+    document.getElementById('progress').textContent = `${completedCount} / ${wordBank.length}`;
+
+    // 取得配對成功的英文索引
+    const engIndex = activeEng.findIndex(item => item && String(item.id) === engId);
+
+    // 抽出一組新單字
+    const newItem = currentQueue.length > 0 ? currentQueue.pop() : null;
+
+    // 1. 左側英文：只更新被消除的那格，其他 4 格不變
+    activeEng[engIndex] = newItem;
+
+    // 2. 右側中文：扣除舊單字、加入新單字並洗牌
+    activeCh = activeCh.filter(item => item && String(item.id) !== chId);
+    if (newItem) {
+      activeCh.push(newItem);
+    }
+    activeCh = shuffle(activeCh);
+
+    selectedEngSlot = null;
+    selectedChSlot = null;
+
+    // 若英文全數清空，宣告通關
+    if (activeEng.every(item => item === null)) {
+      setTimeout(showResult, 600);
+    } else {
+      // 傳入 engIndex，讓系統知道「只有該格英文需要 fade 效果」
+      updateSlotContentsSmoothly(engIndex, true);
+    }
+  } else {
+    // 答錯時：紀錄錯題數與錯過的英文單字
+    wrongCount++;
+    const wrongWordObj = wordBank[parseInt(engId, 10)];
+    if (wrongWordObj) {
+      wrongWordsSet.add(wrongWordObj.eng);
+    }
+
+    selectedEngSlot.classList.add('wrong');
+    selectedChSlot.classList.add('wrong');
+
+    const eSlot = selectedEngSlot;
+    const cSlot = selectedChSlot;
+
+    setTimeout(() => {
+      eSlot.classList.remove('selected', 'wrong');
+      cSlot.classList.remove('selected', 'wrong');
+    }, 500);
+
+    selectedEngSlot = null;
+    selectedChSlot = null;
+  }
+}
+
+// 發送詳細數據至 Google Sheets
+function sendResultToGoogleSheet(timeSpent, correctCount, wrongCount, wrongWords) {
+  if (!GOOGLE_SHEET_URL) return;
+
+  const payload = {
+    timestamp: new Date().toLocaleString('zh-TW'), // 學生做測驗的時間
+    timeSpent: timeSpent,                          // 做了多久
+    correctCount: correctCount,                    // 對了幾題
+    wrongCount: wrongCount,                        // 錯了幾題
+    wrongWords: wrongWords                         // 考錯的單字
+  };
+
+  fetch(GOOGLE_SHEET_URL, {
     method: 'POST',
     mode: 'no-cors',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(payload)
-  })
-  .then(() => {
-    statusDiv.innerText = '成績已成功傳送！';
-    statusDiv.style.color = 'green';
-  })
-  .catch(error => {
-    console.error('上傳失敗:', error);
-    statusDiv.innerText = '成績上傳失敗，請檢查網路連線。';
-    statusDiv.style.color = 'red';
+  }).catch(error => console.error('Error sending data to Google Sheet:', error));
+}
+
+function showResult() {
+  clearInterval(timerInterval);
+  const finalTime = document.getElementById('timer').textContent;
+  document.getElementById('final-time').textContent = finalTime;
+  document.getElementById('result-modal').classList.remove('hidden');
+
+  // 對題數為總題數 (所有單字皆完成配對)
+  const correctCount = wordBank.length;
+  // 將錯字 Set 轉為以逗點分隔的字串
+  const wrongWordsString = wrongWordsSet.size > 0 ? Array.from(wrongWordsSet).join(', ') : '無';
+
+  // 通關時發送資料
+  sendResultToGoogleSheet(finalTime, correctCount, wrongCount, wrongWordsString);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('#english-column .slot').forEach(slot => {
+    slot.addEventListener('click', handleEngClick);
   });
-}
 
-function createStatusDiv() {
-  const div = document.createElement('div');
-  div.id = 'upload-status';
-  div.style.marginTop = '15px';
-  div.style.fontWeight = 'bold';
-  if (resultScreen) resultScreen.appendChild(div);
-  return div;
-}
+  document.querySelectorAll('#chinese-column .slot').forEach(slot => {
+    slot.addEventListener('click', handleChClick);
+  });
 
-function restartQuiz() {
-  if (resultScreen) resultScreen.classList.add('hidden');
-  if (startScreen) startScreen.classList.remove('hidden');
-}
+  document.getElementById('restart-btn').addEventListener('click', initGame);
+  document.getElementById('modal-restart-btn').addEventListener('click', initGame);
+
+  initGame();
+});
