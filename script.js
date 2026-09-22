@@ -40,7 +40,7 @@ const wordBank = [
   { eng: 'replace A with B', ch: '用 B 取代 A' },
   { eng: 'replacement for', ch: '替代(物)' },
   { eng: 'request', ch: '要求(v., n.)' },
-  { eng: 'at one’s request', ch: '應某人要求' },
+  { eng: "at one’s request", ch: '應某人要求' },
   { eng: 'resource', ch: '資源(n.)' },
   { eng: 'source', ch: '來源(n.)' },
   { eng: 'risk', ch: '冒⋯⋯的風險(v.); 風險(n.)' },
